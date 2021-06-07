@@ -3,7 +3,7 @@ module.exports = {
 		config
 			.plugin( 'html' )
 			.tap( args => {
-				args[ 0 ].title = 'Vue Countdown'
+				args[ 0 ].title = 'Vue Countdown App'
 				return args
 			} )
 	},
