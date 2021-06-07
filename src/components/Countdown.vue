@@ -3,7 +3,7 @@
 		<h1>{{ message }}</h1>
 		<form class="timer" @submit.prevent="toggleTimerAction">
 			<div class="row">
-				<ProgressRing :initialTime="initialTime" :currentTime="currentTime" />
+				<CountdownProgressRing :initialTime="initialTime" :currentTime="currentTime" />
 				<div class="column">
 					<BaseButton
 						@click="increaseTimeUnits('hours')"
@@ -62,13 +62,13 @@
 
 <script>
 import BaseButton from './BaseButton.vue'
-import ProgressRing from './ProgressRing.vue'
+import CountdownProgressRing from './CountdownProgressRing.vue'
 import { ref, reactive, computed, watch } from 'vue'
 
 export default {
 	components: {
 		BaseButton,
-		ProgressRing,
+		CountdownProgressRing,
 	},
 	setup() {
 		const message = ref( 'Countdown' )

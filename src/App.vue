@@ -132,7 +132,7 @@ table {
  * Base styles.
  */
 body {
-	font-family: 'Roboto', Avenir, Helvetica, Arial, sans-serif;
+	font-family: var(--font-main);
 	font-size: 1rem;
 	color: var(--gray-800);
 	background-color: var(--white);
