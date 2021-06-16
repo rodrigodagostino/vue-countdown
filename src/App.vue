@@ -1,5 +1,8 @@
 <template>
-	<Countdown />
+	<div class="container">
+		<h1>Countdown App</h1>
+		<Countdown />
+	</div>
 </template>
 
 <script>
@@ -134,8 +137,8 @@ table {
 body {
 	font-family: var(--font-main);
 	font-size: 1rem;
-	color: var(--gray-800);
-	background-color: var(--white);
+	color: var(--gray-600);
+	background-color: var(--gray-100);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	height: 100%;
