@@ -1,63 +1,63 @@
 <template>
-	<div class="container">
-		<h1>{{ message }}</h1>
-		<form class="timer" @submit.prevent="toggleTimerAction">
-			<div class="row">
-				<CountdownProgressRing :initialTime="initialTime" :currentTime="currentTime" />
-				<div class="column">
-					<BaseButton
-						@click="increaseTimeUnits('hours')"
-						icon-classes="fas fa-chevron-up"
-						variation="text-neutral"
-					/>
-					<input type="text" class="time-units" v-model="displayedTime.hours" />
-					<BaseButton
-						@click="decreaseTimeUnits('hours')"
-						icon-classes="fas fa-chevron-down"
-						variation="text-neutral"
-					/>
-					<span class="time-label">Hours</span>
-				</div>
-				<div class="column">
-					<div class="separator">:</div>
-				</div>
-				<div class="column">
-					<BaseButton
-						@click="increaseTimeUnits('minutes')"
-						icon-classes="fas fa-chevron-up"
-						variation="text-neutral"
-					/>
-					<input type="text" class="time-units" v-model="displayedTime.minutes" />
-					<BaseButton
-						@click="decreaseTimeUnits('minutes')"
-						icon-classes="fas fa-chevron-down"
-						variation="text-neutral"
-					/>
-					<span class="time-label">Min</span>
-				</div>
-				<div class="column">
-					<div class="separator">:</div>
-				</div>
-				<div class="column">
-					<BaseButton
-						@click="increaseTimeUnits('seconds')"
-						icon-classes="fas fa-chevron-up"
-						variation="text-neutral"
-					/>
-					<input type="text" class="time-units" v-model="displayedTime.seconds" />
-					<BaseButton
-						@click="decreaseTimeUnits('seconds')"
-						icon-classes="fas fa-chevron-down"
-						variation="text-neutral"
-					/>
-					<span class="time-label">Sec</span>
-				</div>
+	<form class="countdown" @submit.prevent="toggleTimerAction">
+		<div class="row">
+			<CountdownProgressRing :initialTime="initialTime" :currentTime="currentTime" />
+			<div class="column">
+				<BaseButton
+					@click="increaseTimeUnits('hours')"
+					icon-classes="fas fa-chevron-up"
+					variation="flat"
+				/>
+				<input type="text" class="time-units" v-model="displayedTime.hours" />
+				<BaseButton
+					@click="decreaseTimeUnits('hours')"
+					icon-classes="fas fa-chevron-down"
+					variation="flat"
+				/>
+				<span class="time-label">Hours</span>
 			</div>
-			<div class="row">
-				<BaseButton type="submit" :icon-classes="toggleActionButtonIconClasses" />
+			<div class="column">
+				<div class="separator">:</div>
 			</div>
-		</form>
-	</div>
+			<div class="column">
+				<BaseButton
+					@click="increaseTimeUnits('minutes')"
+					icon-classes="fas fa-chevron-up"
+					variation="flat"
+				/>
+				<input type="text" class="time-units" v-model="displayedTime.minutes" />
+				<BaseButton
+					@click="decreaseTimeUnits('minutes')"
+					icon-classes="fas fa-chevron-down"
+					variation="flat"
+				/>
+				<span class="time-label">Min</span>
+			</div>
+			<div class="column">
+				<div class="separator">:</div>
+			</div>
+			<div class="column">
+				<BaseButton
+					@click="increaseTimeUnits('seconds')"
+					icon-classes="fas fa-chevron-up"
+					variation="flat"
+				/>
+				<input type="text" class="time-units" v-model="displayedTime.seconds" />
+				<BaseButton
+					@click="decreaseTimeUnits('seconds')"
+					icon-classes="fas fa-chevron-down"
+					variation="flat"
+				/>
+				<span class="time-label">Sec</span>
+			</div>
+		</div>
+		<div class="row">
+			<BaseButton type="submit" :icon-classes="toggleActionButtonIconClasses" variation="fill" size="medium" />
+		</div>
+		<audio ref="audio" controls>
+			<source src="../assets/ding-dong.wav" type="audio/wav">
+		</audio>
+	</form>
 </template>
 
 <script>
@@ -71,16 +71,16 @@ export default {
 		CountdownProgressRing,
 	},
 	setup() {
-		const message = ref( 'Countdown' )
 		const currentState = ref( 'idle' )
-		const initialTime = ref( null )
-		const currentTime = ref( null )
+		const initialTime = ref( 0 )
+		const currentTime = ref( 0 )
 		const displayedTime = reactive( {
 			hours: '00',
 			minutes: '00',
 			seconds: '00',
 		} )
 		let intervalId = null
+		const audio = ref( null )
 
 		const setInitialTime = () => initialTime.value = displayedTimeToMS()
 
@@ -89,7 +89,7 @@ export default {
 		watch( currentTime, () => {
 			if ( currentTime.value <= 0 ) {
 				pauseTimer()
-				currentState.value = 'idle'
+				audio.value.play()
 			}
 			setDisplayedTime()
 		} )
@@ -147,9 +147,8 @@ export default {
 		} )
 
 		const startTimer = () => {
-			if ( initialTime.value === null ) {
-				setInitialTime()
-				setCurrentTime()
+			if ( !initialTime.value || !currentTime.value ) {
+				return
 			}
 			currentState.value = 'running'
 			intervalId = setInterval( () => {
@@ -162,13 +161,7 @@ export default {
 			clearInterval( intervalId )
 		}
 
-		const toggleTimerAction = () => {
-			if ( currentState.value === 'idle' ) {
-				startTimer()
-			} else {
-				pauseTimer()
-			}
-		}
+		const toggleTimerAction = () => currentState.value === 'idle' ? startTimer() : pauseTimer()
 
 		/**
 		 * Utilities
@@ -176,13 +169,13 @@ export default {
 		const formatNumber = num => num < 10 ? `0${ num }` : num
 
 		return {
-			message,
-			currentState,
-			displayedTime,
-			toggleActionButtonIconClasses,
-			toggleTimerAction,
 			initialTime,
 			currentTime,
+			currentState,
+			displayedTime,
+			audio,
+			toggleActionButtonIconClasses,
+			toggleTimerAction,
 			increaseTimeUnits,
 			decreaseTimeUnits,
 		}
@@ -192,7 +185,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.timer {
+.countdown {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -235,5 +228,9 @@ export default {
 .separator {
 	font-size: 2.5rem;
 	margin-top: 1.325em;
+}
+
+audio {
+	display: none;
 }
 </style>

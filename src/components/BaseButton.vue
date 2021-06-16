@@ -26,7 +26,7 @@ export default {
 		variation: {
 			type: String,
 			required: false,
-			default: 'outline-main',
+			default: 'flat',
 		},
 		size: {
 			type: String,
@@ -59,12 +59,8 @@ export default {
 		},
 		buttonClasses() {
 			return {
-				'button--fill-main': this.variation === 'fill-main',
-				'button--fill-neutral': this.variation === 'fill-neutral',
-				'button--outline-main': this.variation === 'outline-main',
-				'button--outline-neutral': this.variation === 'outline-neutral',
-				'button--text-main': this.variation === 'text-main',
-				'button--text-neutral': this.variation === 'text-neutral',
+				'button--fill': this.variation === 'fill',
+				'button--flat': this.variation === 'flat',
 				'button--small': this.size === 'small',
 				'button--medium': this.size === 'medium',
 				'button--large': this.size === 'large',
@@ -80,105 +76,49 @@ export default {
 	font-weight: 600;
 	text-transform: uppercase;
 	cursor: pointer;
-	border-radius: 0.5rem;
-	padding: 0.5rem 1rem;
-	transition: color 0.32s ease, background-color 0.32s ease, border 0.32s ease;
+	border: none;
+	border-radius: 0.75em;
+	padding: 0.875em 1em;
 	outline: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.24s ease, box-shadow 0.12s ease;
 }
 
 .button i + span {
 	margin-left: 0.5rem;
 }
 
-.button--fill-main {
-	color: white;
-	background-color: var(--color-main);
-	border: 2px solid var(--color-main);
+.button--fill {
+	background-color: var(--gray-100);
+	box-shadow: -0.25em -0.25em 0.5em 0.125em rgba(255, 255, 255, 0.6),
+				inset 1px 1px 1px rgba(255, 255, 255, 0.6),
+				/* The next line is only used to allow the box-shadow transition to work */
+				inset 0.125em 0.125em 0.5em transparent,
+				inset -1px -1px 1px rgba(0, 0, 0, 0.05),
+				inset -2px -2px 1rem -0.5rem rgba(255, 255, 255, 1),
+				0.25em 0.25em 0.5em 0.125em rgba(0, 0, 0, 0.15);
 }
 
-.button--fill-main:focus,
-.button--fill-main:hover {
-	background-color: var(--color-main--light);
-	border-color: var(--color-main--light);
-}
-
-.button--fill-main:active {
-	background-color: var(--color-main--dark);
-	border-color: var(--color-main--dark);
-}
-
-.button--fill-neutral {
-	color: white;
-	background-color: var(--gray-400);
-	border: 2px solid var(--gray-400);
-}
-
-.button--fill-neutral:focus,
-.button--fill-neutral:hover {
-	background-color: var(--gray-200);
-	border-color: var(--gray-200);
-}
-
-.button--fill-neutral:active {
-	background-color: var(--gray-600);
-	border-color: var(--gray-600);
-}
-
-.button--outline-main {
+.button--fill:focus,
+.button--fill:hover {
 	color: var(--color-main);
-	background-color: transparent;
-	border: 2px solid var(--color-main);
 }
 
-.button--outline-main:focus,
-.button--outline-main:hover {
-	color: white;
-	background-color: var(--color-main);
+.button--fill:active {
+	box-shadow: -0.125em -0.125em 0.25em 0 rgba(255, 255, 255, 0.6),
+				inset 1px 1px 1px rgba(255, 255, 255, 0.6),
+				inset 0.125em 0.125em 0.5em rgba(0, 0, 0, 0.1),
+				inset -1px -1px 1px rgba(0, 0, 0, 0.1),
+				inset -0.125em -0.125em 0.5em rgba(255, 255, 255, 1),
+				0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.1);
 }
 
-.button--outline-main:active {
-	background-color: var(--color-main--dark);
-}
+.button--flat {}
 
-.button--outline-neutral {
-	color: var(--gray-400);
-	background-color: transparent;
-	border: 2px solid var(--gray-400);
-}
-
-.button--outline-neutral:focus,
-.button--outline-neutral:hover {
-	color: white;
-	background-color: var(--gray-400);
-}
-
-.button--outline-neutral:active {
-	background-color: var(--gray-600);
-}
-
-.button--text-main {
-	color: var(--color-main);
-	background-color: transparent;
-	border: 2px solid transparent;
-}
-
-.button--text-main:focus,
-.button--text-main:hover {
-	color: var(--color-main--light);
-}
-
-.button--text-neutral {
-	color: var(--gray-400);
-	background-color: transparent;
-	border: 2px solid transparent;
-}
-
-.button--text-neutral:focus {
-	outline: 1px dotted white;
-}
-
-.button--text-neutral:focus,
-.button--text-neutral:hover {
+.button--flat:focus,
+.button--flat:hover {
 	color: var(--color-main);
 }
 
