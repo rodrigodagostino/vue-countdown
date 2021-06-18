@@ -1,7 +1,12 @@
 <template>
 	<form class="countdown" @submit.prevent="toggleTimerAction">
-		<div class="row">
-			<CountdownProgressRing :initialTime="initialTime" :currentTime="currentTime" />
+		<div class="countdown-time row">
+			<CountdownProgressRing
+				:initialTime="initialTime"
+				:currentTime="currentTime"
+				diameter="300"
+				strokeWidth="16"
+			/>
 			<div class="column">
 				<BaseButton
 					@click="increaseTimeUnits('hours')"
@@ -14,7 +19,7 @@
 					icon-classes="fas fa-chevron-down"
 					variation="flat"
 				/>
-				<span class="time-label">Hours</span>
+				<span class="time-label">H</span>
 			</div>
 			<div class="column">
 				<div class="separator">:</div>
@@ -31,7 +36,7 @@
 					icon-classes="fas fa-chevron-down"
 					variation="flat"
 				/>
-				<span class="time-label">Min</span>
+				<span class="time-label">M</span>
 			</div>
 			<div class="column">
 				<div class="separator">:</div>
@@ -48,14 +53,24 @@
 					icon-classes="fas fa-chevron-down"
 					variation="flat"
 				/>
-				<span class="time-label">Sec</span>
+				<span class="time-label">S</span>
 			</div>
 		</div>
-		<div class="row">
-			<BaseButton type="submit" :icon-classes="toggleActionButtonIconClasses" variation="fill" size="medium" />
+		<div class="countdown-actions row">
+			<BaseButton
+				@click="resetTimer"
+				icon-classes="fas fa-undo-alt"
+				variation="fill"
+			/>
+			<BaseButton
+				type="submit"
+				:icon-classes="toggleActionButtonIconClasses"
+				variation="fill"
+				size="medium"
+			/>
 		</div>
 		<audio ref="audio" controls>
-			<source src="../assets/ding-dong.wav" type="audio/wav">
+			<source src="../assets/ding-dong.wav" type="audio/wav" />
 		</audio>
 	</form>
 </template>
@@ -161,7 +176,10 @@ export default {
 			clearInterval( intervalId )
 		}
 
-		const toggleTimerAction = () => currentState.value === 'idle' ? startTimer() : pauseTimer()
+		const toggleTimerAction = () =>
+			currentState.value === 'idle' ? startTimer() : pauseTimer()
+
+		const resetTimer = () => currentTime.value = initialTime.value
 
 		/**
 		 * Utilities
@@ -174,10 +192,11 @@ export default {
 			currentState,
 			displayedTime,
 			audio,
-			toggleActionButtonIconClasses,
-			toggleTimerAction,
 			increaseTimeUnits,
 			decreaseTimeUnits,
+			toggleActionButtonIconClasses,
+			toggleTimerAction,
+			resetTimer,
 		}
 	},
 }
@@ -194,9 +213,24 @@ export default {
 	padding: 2rem;
 }
 
+.countdown-actions {
+	align-items: center;
+	gap: 1.5rem;
+
+	&::after {
+		content: "";
+		width: 3rem;
+		height: 2.75rem;
+	}
+}
+
 .row {
 	display: flex;
 	position: relative;
+
+	&:nth-child(2) {
+		margin-top: 5rem;
+	}
 }
 
 .column {
@@ -227,7 +261,7 @@ export default {
 
 .separator {
 	font-size: 2.5rem;
-	margin-top: 1.325em;
+	margin-top: 2.6875rem;
 }
 
 audio {
