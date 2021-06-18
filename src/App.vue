@@ -1,6 +1,5 @@
 <template>
 	<div class="container">
-		<h1>Countdown App</h1>
 		<Countdown />
 	</div>
 </template>
@@ -22,9 +21,10 @@ export default {
  */
 :root {
 	--font-main: 'Poppins', Avenir, Helvetica, Arial, sans-serif;
-	--color-main--light: #a7f3d0;
-	--color-main: #34d399;
-	--color-main--dark: #059669;
+
+	--emerald-400: #34d399;
+	--teal-600: #0D9488;
+
 	--white: #f3f3f5;
 	--gray-050: #ededf0;
 	--gray-100: #e1e1e6;
