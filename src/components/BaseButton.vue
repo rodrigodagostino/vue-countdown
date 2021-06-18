@@ -103,7 +103,7 @@ export default {
 
 .button--fill:focus,
 .button--fill:hover {
-	color: var(--color-main);
+	color: var(--emerald-400);
 }
 
 .button--fill:active {
@@ -119,7 +119,7 @@ export default {
 
 .button--flat:focus,
 .button--flat:hover {
-	color: var(--color-main);
+	color: var(--emerald-400);
 }
 
 .button--small {
