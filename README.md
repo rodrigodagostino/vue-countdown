@@ -1,4 +1,10 @@
-# countdown
+# Vue Countdown App
+
+## Live demo
+Deployed with [Netlify](https://v-countdown-app.netlify.app/).
+
+## Potential future features
+- Implement vertical sliders to use for selecting the time values.
 
 ## Project setup
 ```
