@@ -1,7 +1,16 @@
 <template>
-	<component :is="tag" :href="href" :target="target" :type="computedType" class="button" :class="buttonClasses">
+	<component
+		:is="tag"
+		:href="href"
+		:target="target"
+		:type="computedType"
+		class="button"
+		:class="buttonClasses"
+	>
 		<i v-if="iconClasses" :class="iconClasses"></i>
-		<span v-if="$slots.default" :class="textClasses"><slot></slot></span>
+		<span v-if="$slots.default" :class="textClasses">
+			<slot />
+		</span>
 	</component>
 </template>
 
@@ -93,12 +102,11 @@ export default {
 .button--fill {
 	background-color: var(--gray-100);
 	box-shadow: -0.25em -0.25em 0.5em 0.125em rgba(255, 255, 255, 0.6),
-				inset 1px 1px 1px rgba(255, 255, 255, 0.6),
-				/* The next line is only used to allow the box-shadow transition to work */
-				inset 0.125em 0.125em 0.5em transparent,
-				inset -1px -1px 1px rgba(0, 0, 0, 0.05),
-				inset -2px -2px 1rem -0.5rem rgba(255, 255, 255, 1),
-				0.25em 0.25em 0.5em 0.125em rgba(0, 0, 0, 0.15);
+		inset 1px 1px 1px rgba(255, 255, 255, 0.6),
+		/* The next line is only used to allow the box-shadow transition to work */ inset 0.125em
+			0.125em 0.5em transparent,
+		inset -1px -1px 1px rgba(0, 0, 0, 0.05), inset -2px -2px 1rem -0.5rem rgba(255, 255, 255, 1),
+		0.25em 0.25em 0.5em 0.125em rgba(0, 0, 0, 0.15);
 }
 
 .button--fill:focus,
@@ -108,14 +116,13 @@ export default {
 
 .button--fill:active {
 	box-shadow: -0.125em -0.125em 0.25em 0 rgba(255, 255, 255, 0.6),
-				inset 1px 1px 1px rgba(255, 255, 255, 0.6),
-				inset 0.125em 0.125em 0.5em rgba(0, 0, 0, 0.1),
-				inset -1px -1px 1px rgba(0, 0, 0, 0.1),
-				inset -0.125em -0.125em 0.5em rgba(255, 255, 255, 1),
-				0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.1);
+		inset 1px 1px 1px rgba(255, 255, 255, 0.6), inset 0.125em 0.125em 0.5em rgba(0, 0, 0, 0.1),
+		inset -1px -1px 1px rgba(0, 0, 0, 0.1), inset -0.125em -0.125em 0.5em rgba(255, 255, 255, 1),
+		0.125em 0.125em 0.25em 0 rgba(0, 0, 0, 0.1);
 }
 
-.button--flat {}
+.button--flat {
+}
 
 .button--flat:focus,
 .button--flat:hover {
