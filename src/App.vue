@@ -1,12 +1,12 @@
 <template>
-	<div class="site-main">
+	<main class="site-main">
 		<div class="container">
 			<Countdown />
 		</div>
-	</div>
+	</main>
 	<footer class="site-footer">
 		<div class="container">
-			<a href="https://github.com/rodrigodagostino/vue-todo-app" target="_blank">
+			<a href="https://github.com/rodrigodagostino/vue-countdown-app" target="_blank">
 				Made with <img src="@/assets/vue-logo.png" alt="Vue.js logo" /> by Rodrigo D’Agostino
 			</a>
 		</div>
