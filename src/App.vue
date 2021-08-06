@@ -1,7 +1,16 @@
 <template>
-	<div class="container">
-		<Countdown />
+	<div class="site-main">
+		<div class="container">
+			<Countdown />
+		</div>
 	</div>
+	<footer class="site-footer">
+		<div class="container">
+			<a href="https://github.com/rodrigodagostino/vue-todo-app" target="_blank">
+				Made with <img src="@/assets/vue-logo.png" alt="Vue.js logo" /> by Rodrigo D’Agostino
+			</a>
+		</div>
+	</footer>
 </template>
 
 <script>
@@ -23,7 +32,7 @@ export default {
 	--font-main: 'Poppins', Avenir, Helvetica, Arial, sans-serif;
 
 	--emerald-400: #34d399;
-	--teal-600: #0D9488;
+	--teal-600: #0d9488;
 
 	--white: #f3f3f5;
 	--gray-050: #ededf0;
@@ -145,7 +154,11 @@ body {
 	text-align: center;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+}
+
+.site {
+	display: flex;
+	flex-direction: column;
 }
 
 .container {
@@ -153,5 +166,40 @@ body {
 	margin: 0 auto;
 	padding: 1rem;
 	position: relative;
+}
+
+.site-main {
+	margin-top: 24vh;
+}
+
+.site-footer {
+	font-size: 0.875rem;
+	text-align: center;
+	margin-top: auto;
+}
+
+.site-footer .container {
+	display: flex;
+	justify-content: center;
+	padding: 1rem 0;
+}
+
+.site-footer a {
+	color: var(--gray-400);
+	text-decoration: none;
+	transition: color 0.24s ease;
+}
+
+.site-footer a:focus,
+.site-footer a:hover {
+	color: var(--gray-600);
+}
+
+.site-footer img {
+	height: 1.25rem;
+	width: auto;
+	vertical-align: middle;
+	margin: 0 0.25rem;
+	display: inline-block;
 }
 </style>
