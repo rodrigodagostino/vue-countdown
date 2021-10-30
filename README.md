@@ -5,6 +5,8 @@ Deployed with [Netlify](https://v-countdown-app.netlify.app/).
 
 ## Potential future features
 - Implement vertical sliders to use for selecting the time values.
+- Proper synchronization between time and timeline
+- Manual input of units
 
 ## Project setup
 ```
