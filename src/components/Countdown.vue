@@ -9,7 +9,12 @@
 			/>
 			<div class="column">
 				<BaseButton @click="increaseTimeUnits('hours')" icon-classes="fas fa-chevron-up" variation="flat" />
-				<input type="text" class="time-units" v-model="displayedTime.hours" />
+				<input
+					type="text"
+					class="time-units"
+					:value="displayedTime.hours"
+					@input="setTimeUnits('hours', $event.target.value)"
+				/>
 				<BaseButton @click="decreaseTimeUnits('hours')" icon-classes="fas fa-chevron-down" variation="flat" />
 				<span class="time-label">H</span>
 			</div>
@@ -18,7 +23,12 @@
 			</div>
 			<div class="column">
 				<BaseButton @click="increaseTimeUnits('minutes')" icon-classes="fas fa-chevron-up" variation="flat" />
-				<input type="text" class="time-units" v-model="displayedTime.minutes" />
+				<input
+					type="text"
+					class="time-units"
+					:value="displayedTime.minutes"
+					@input="setTimeUnits('minutes', $event.target.value)"
+				/>
 				<BaseButton @click="decreaseTimeUnits('minutes')" icon-classes="fas fa-chevron-down" variation="flat" />
 				<span class="time-label">M</span>
 			</div>
@@ -27,7 +37,12 @@
 			</div>
 			<div class="column">
 				<BaseButton @click="increaseTimeUnits('seconds')" icon-classes="fas fa-chevron-up" variation="flat" />
-				<input type="text" class="time-units" v-model="displayedTime.seconds" />
+				<input
+					type="text"
+					class="time-units"
+					:value="displayedTime.seconds"
+					@input="setTimeUnits('seconds', $event.target.value)"
+				/>
 				<BaseButton @click="decreaseTimeUnits('seconds')" icon-classes="fas fa-chevron-down" variation="flat" />
 				<span class="time-label">S</span>
 			</div>
@@ -84,20 +99,28 @@ const displayedTimeToMS = () => {
 }
 
 watch( displayedTime, newValue => {
-	if ( +newValue.hours < 0 || newValue.hours === '' ) displayedTime.hours = '00'
-	if ( +newValue.minutes > 59 ) displayedTime.minutes = '59'
-	if ( +newValue.minutes < 0 || newValue.minutes === '' ) displayedTime.minutes = '00'
-	if ( +newValue.seconds > 59 ) displayedTime.seconds = '59'
-	if ( +newValue.seconds < 0 || newValue.seconds === '' ) displayedTime.seconds = '00'
+	if ( +newValue.hours < 0 || newValue.hours === '' ) setTimeUnits( 'hours', 0 )
+	if ( +newValue.minutes < 0 || newValue.minutes === '' ) setTimeUnits( 'minutes', 0 )
+	if ( +newValue.seconds < 0 || newValue.seconds === '' ) setTimeUnits( 'seconds', 0 )
 } )
 
 /**
  * Timer controls
  */
+const setTimeUnits = ( units, value ) => {
+	if ( currentState.value === 'running' ) pauseTimer()
+	displayedTime[ units ] = value <= 59 ? formatNumber( value ) : 59
+	setInitialTime()
+	setCurrentTime()
+}
+
 const increaseTimeUnits = units => {
 	if ( currentState.value === 'running' ) pauseTimer()
 	const increasedValue = +displayedTime[ units ] + 1
-	if ( increasedValue > 59 && ( units === 'minutes' || units === 'seconds' ) ) {
+	if ( increasedValue > 59 ) {
+		if ( units === 'minutes' ) displayedTime[ 'hours' ] = formatNumber( +displayedTime[ 'hours' ] + 1 )
+		if ( units === 'seconds' ) displayedTime[ 'minutes' ] = formatNumber( +displayedTime[ 'minutes' ] + 1 )
+		displayedTime[ units ] = formatNumber( 0 )
 		return
 	}
 	displayedTime[ units ] = formatNumber( increasedValue )
