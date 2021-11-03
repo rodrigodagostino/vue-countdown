@@ -65,11 +65,11 @@ import { ref, reactive, computed, watch } from 'vue'
 const currentState = ref( 'idle' )
 const initialTime = ref( 0 )
 const currentTime = ref( 0 )
-const displayedTime = reactive( {
+const displayedTime = reactive({
 	hours: '00',
 	minutes: '00',
 	seconds: '00',
-} )
+})
 let intervalId = null
 const audio = ref( null )
 
@@ -83,7 +83,7 @@ watch( currentTime, () => {
 		audio.value.play()
 	}
 	setDisplayedTime()
-} )
+})
 
 const setDisplayedTime = () => {
 	displayedTime.hours = formatNumber( Math.floor( currentTime.value / 1000 / 60 / 60 ) )
@@ -102,7 +102,7 @@ watch( displayedTime, newValue => {
 	if ( +newValue.hours < 0 || newValue.hours === '' ) setTimeUnits( 'hours', 0 )
 	if ( +newValue.minutes < 0 || newValue.minutes === '' ) setTimeUnits( 'minutes', 0 )
 	if ( +newValue.seconds < 0 || newValue.seconds === '' ) setTimeUnits( 'seconds', 0 )
-} )
+})
 
 /**
  * Timer controls
@@ -143,7 +143,7 @@ const toggleActionButtonIconClasses = computed( () => {
 		return 'fas fa-play'
 	}
 	return 'fas fa-pause'
-} )
+})
 
 const startTimer = () => {
 	if ( !initialTime.value || !currentTime.value ) {

@@ -43,12 +43,12 @@
 <script setup>
 import { computed } from 'vue'
 
-const props = defineProps( {
+const props = defineProps({
 	initialTime: Number,
 	currentTime: Number,
 	diameter: String,
 	strokeWidth: String,
-} )
+})
 
 const ringDiameter = +props.diameter
 const ringStrokeWidth = +props.strokeWidth
@@ -59,7 +59,7 @@ const ringStrokeDashoffset = computed( () => {
 		return ringStrokeDasharray / 100 * ( 100 - progressPercentage )
 	}
 	return null
-} )
+})
 </script>
 
 <style scoped lang="scss">

@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-const props = defineProps( {
+const props = defineProps({
 	href: {
 		type: String,
 		required: false,
@@ -44,7 +44,7 @@ const props = defineProps( {
 		required: false,
 		default: null,
 	},
-} )
+})
 
 const tag = props.href ? 'a' : 'button'
 
