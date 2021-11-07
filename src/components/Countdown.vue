@@ -111,7 +111,7 @@ const setInitialTime = () => initialTime.value = displayedTimeToMS()
 const setCurrentTime = () => currentTime.value = displayedTimeToMS()
 
 watch( currentTime, () => {
-  if ( currentTime.value <= 0 ) {
+  if ( currentTime.value <= 0 && currentState.value === 'running' ) {
     pauseTimer()
     audio.value.play()
   }
@@ -136,7 +136,8 @@ const displayedTimeToMS = () => {
 }
 
 watch( displayedTime, newValue => {
-  if ( +newValue.hours < 0 || newValue.hours === '' ) setTimeUnits( 'hours', 0 )
+  if ( +newValue.hours < 0 || newValue.hours === '' )
+    setTimeUnits( 'hours', 0 )
   if ( +newValue.minutes < 0 || newValue.minutes === '' )
     setTimeUnits( 'minutes', 0 )
   if ( +newValue.seconds < 0 || newValue.seconds === '' )
