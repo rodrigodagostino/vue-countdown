@@ -17,6 +17,7 @@
           type="text"
           class="time-units"
           :value="displayedTime.hours"
+          @keydown="checkForNumber"
           @input="setTimeUnits('hours', $event.target.value)"
         />
         <BaseButton
@@ -39,6 +40,7 @@
           type="text"
           class="time-units"
           :value="displayedTime.minutes"
+          @keydown="checkForNumber"
           @input="setTimeUnits('minutes', $event.target.value)"
         />
         <BaseButton
@@ -61,6 +63,7 @@
           type="text"
           class="time-units"
           :value="displayedTime.seconds"
+          @keydown="checkForNumber"
           @input="setTimeUnits('seconds', $event.target.value)"
         />
         <BaseButton
@@ -144,9 +147,12 @@ watch( displayedTime, newValue => {
     setTimeUnits( 'seconds', 0 )
 })
 
-/**
- * Timer controls
- */
+const checkForNumber = event => {
+  if ( event.keyCode < 48 || event.keyCode > 57 ) {
+    event.preventDefault()
+  }
+}
+
 const setTimeUnits = ( units, value ) => {
   if ( currentState.value === 'running' ) pauseTimer()
   displayedTime[ units ] = value <= 59 ? formatNumber( value ) : 59
@@ -154,6 +160,9 @@ const setTimeUnits = ( units, value ) => {
   setCurrentTime()
 }
 
+/**
+ * Timer controls
+ */
 const increaseTimeUnits = units => {
   if ( currentState.value === 'running' ) pauseTimer()
   const increasedValue = +displayedTime[ units ] + 1
