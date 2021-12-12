@@ -7,7 +7,11 @@ defineProps({
 defineEmits([ 'setTimeUnits', 'increaseTimeUnits', 'decreaseTimeUnits' ])
 
 const checkIsNumber = event => {
-  if ( event.keyCode < 48 || event.keyCode > 57 ) {
+  const keyCode = event.keyCode
+  if (
+    !keyCode >= 48 && !keyCode <= 57 ||
+    !keyCode >= 96 && !keyCode <= 105
+  ) {
     event.preventDefault()
   }
 }
