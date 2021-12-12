@@ -28,6 +28,7 @@ const checkIsNumber = event => {
       type="text"
       class="time-units"
       :value="displayedTime.hours"
+      maxlength="2"
       @keydown="checkIsNumber"
       @input="$emit('setTimeUnits', 'hours', $event.target.value)"
     />
@@ -51,6 +52,7 @@ const checkIsNumber = event => {
       type="text"
       class="time-units"
       :value="displayedTime.minutes"
+      maxlength="2"
       @keydown="checkIsNumber"
       @input="$emit('setTimeUnits', 'minutes', $event.target.value)"
     />
@@ -74,6 +76,7 @@ const checkIsNumber = event => {
       type="text"
       class="time-units"
       :value="displayedTime.seconds"
+      maxlength="2"
       @keydown="checkIsNumber"
       @input="$emit('setTimeUnits', 'seconds', $event.target.value)"
     />
