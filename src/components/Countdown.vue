@@ -2,77 +2,17 @@
   <form class="countdown" @submit.prevent="toggleTimerAction">
     <div class="countdown-time row">
       <CountdownProgressRing
-        :initialTime="initialTime"
-        :currentTime="currentTime"
+        :initial-time="initialTime"
+        :current-time="currentTime"
         diameter="300"
-        strokeWidth="16"
+        stroke-width="16"
       />
-      <div class="column">
-        <BaseButton
-          @click="increaseTimeUnits('hours')"
-          icon-classes="fas fa-chevron-up"
-          variation="flat"
-        />
-        <input
-          type="text"
-          class="time-units"
-          :value="displayedTime.hours"
-          @keydown="checkForNumber"
-          @input="setTimeUnits('hours', $event.target.value)"
-        />
-        <BaseButton
-          @click="decreaseTimeUnits('hours')"
-          icon-classes="fas fa-chevron-down"
-          variation="flat"
-        />
-        <span class="time-label">H</span>
-      </div>
-      <div class="column">
-        <div class="separator">:</div>
-      </div>
-      <div class="column">
-        <BaseButton
-          @click="increaseTimeUnits('minutes')"
-          icon-classes="fas fa-chevron-up"
-          variation="flat"
-        />
-        <input
-          type="text"
-          class="time-units"
-          :value="displayedTime.minutes"
-          @keydown="checkForNumber"
-          @input="setTimeUnits('minutes', $event.target.value)"
-        />
-        <BaseButton
-          @click="decreaseTimeUnits('minutes')"
-          icon-classes="fas fa-chevron-down"
-          variation="flat"
-        />
-        <span class="time-label">M</span>
-      </div>
-      <div class="column">
-        <div class="separator">:</div>
-      </div>
-      <div class="column">
-        <BaseButton
-          @click="increaseTimeUnits('seconds')"
-          icon-classes="fas fa-chevron-up"
-          variation="flat"
-        />
-        <input
-          type="text"
-          class="time-units"
-          :value="displayedTime.seconds"
-          @keydown="checkForNumber"
-          @input="setTimeUnits('seconds', $event.target.value)"
-        />
-        <BaseButton
-          @click="decreaseTimeUnits('seconds')"
-          icon-classes="fas fa-chevron-down"
-          variation="flat"
-        />
-        <span class="time-label">S</span>
-      </div>
+      <CountdownDisplay
+        :displayed-time="displayedTime"
+        @set-time-units="setTimeUnits"
+        @increase-time-units="increaseTimeUnits"
+        @decrease-time-units="decreaseTimeUnits"
+      />
     </div>
     <div class="countdown-actions row">
       <BaseButton
@@ -94,9 +34,10 @@
 </template>
 
 <script setup>
-import BaseButton from './BaseButton.vue'
-import CountdownProgressRing from './CountdownProgressRing.vue'
 import { ref, reactive, computed, watch } from 'vue'
+import BaseButton from './BaseButton.vue'
+import CountdownDisplay from './CountdownDisplay.vue'
+import CountdownProgressRing from './CountdownProgressRing.vue'
 
 const currentState = ref( 'idle' )
 const initialTime = ref( 0 )
@@ -139,19 +80,12 @@ const displayedTimeToMS = () => {
 }
 
 watch( displayedTime, newValue => {
-  if ( +newValue.hours < 0 || newValue.hours === '' )
-    setTimeUnits( 'hours', 0 )
+  if ( +newValue.hours < 0 || newValue.hours === '' ) setTimeUnits( 'hours', 0 )
   if ( +newValue.minutes < 0 || newValue.minutes === '' )
     setTimeUnits( 'minutes', 0 )
   if ( +newValue.seconds < 0 || newValue.seconds === '' )
     setTimeUnits( 'seconds', 0 )
 })
-
-const checkForNumber = event => {
-  if ( event.keyCode < 48 || event.keyCode > 57 ) {
-    event.preventDefault()
-  }
-}
 
 const setTimeUnits = ( units, value ) => {
   if ( currentState.value === 'running' ) pauseTimer()
@@ -222,7 +156,7 @@ const resetTimer = () => currentTime.value = initialTime.value
 const formatNumber = num => num < 10 ? `0${ num }` : num
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .countdown {
   display: flex;
   flex-direction: column;
@@ -256,31 +190,6 @@ const formatNumber = num => num < 10 ? `0${ num }` : num
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.time-units {
-  font-family: var(--font-main);
-  font-size: 2.5rem;
-  text-align: center;
-  max-width: 4rem;
-  background-color: transparent;
-  border-color: transparent;
-}
-
-.button-increase,
-.button-decrease {
-  border-color: transparent;
-}
-
-.time-label {
-  font-family: var(--font-main);
-  font-size: 0.875rem;
-  text-transform: uppercase;
-}
-
-.separator {
-  font-size: 2.5rem;
-  margin-top: 2.6875rem;
 }
 
 audio {
