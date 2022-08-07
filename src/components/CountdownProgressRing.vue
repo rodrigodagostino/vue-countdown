@@ -52,11 +52,11 @@ const props = defineProps({
 
 const ringDiameter = +props.diameter
 const ringStrokeWidth = +props.strokeWidth
-const ringStrokeDasharray = ( ringDiameter - ringStrokeWidth ) * Math.PI
-const ringStrokeDashoffset = computed( () => {
-  if ( props.initialTime ) {
-    const progressPercentage = props.currentTime * 100 / props.initialTime
-    return ringStrokeDasharray / 100 * ( 100 - progressPercentage )
+const ringStrokeDasharray = (ringDiameter - ringStrokeWidth) * Math.PI
+const ringStrokeDashoffset = computed(() => {
+  if (props.initialTime) {
+    const progressPercentage = (props.currentTime * 100) / props.initialTime
+    return (ringStrokeDasharray / 100) * (100 - progressPercentage)
   }
   return null
 })
@@ -115,8 +115,7 @@ const ringStrokeDashoffset = computed( () => {
   &__track-outer-shadow {
     box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.05),
       inset -2px -2px 4px rgba(255, 255, 255, 0.6),
-      inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-      1px 1px 1px rgba(255, 255, 255, 0.6);
+      inset 2px 2px 4px rgba(0, 0, 0, 0.1), 1px 1px 1px rgba(255, 255, 255, 0.6);
   }
 }
 </style>

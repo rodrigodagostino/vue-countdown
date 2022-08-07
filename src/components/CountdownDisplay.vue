@@ -4,13 +4,13 @@ import BaseButton from './BaseButton.vue'
 defineProps({
   displayedTime: Object,
 })
-defineEmits([ 'setTimeUnits', 'increaseTimeUnits', 'decreaseTimeUnits' ])
+defineEmits(['setTimeUnits', 'increaseTimeUnits', 'decreaseTimeUnits'])
 
-const checkIsNumber = event => {
+const checkIsNumber = (event) => {
   const keyCode = event.keyCode
   if (
-    !keyCode >= 48 && !keyCode <= 57 ||
-    !keyCode >= 96 && !keyCode <= 105
+    (!keyCode >= 48 && !keyCode <= 57) ||
+    (!keyCode >= 96 && !keyCode <= 105)
   ) {
     event.preventDefault()
   }

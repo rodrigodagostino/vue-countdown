@@ -39,23 +39,23 @@ import BaseButton from './BaseButton.vue'
 import CountdownDisplay from './CountdownDisplay.vue'
 import CountdownProgressRing from './CountdownProgressRing.vue'
 
-const currentState = ref( 'idle' )
-const initialTime = ref( 0 )
-const currentTime = ref( 0 )
+const currentState = ref('idle')
+const initialTime = ref(0)
+const currentTime = ref(0)
 const displayedTime = reactive({
   hours: '00',
   minutes: '00',
   seconds: '00',
 })
 let intervalId = null
-const audio = ref( null )
+const audio = ref(null)
 
-const setInitialTime = () => initialTime.value = displayedTimeToMS()
+const setInitialTime = () => (initialTime.value = displayedTimeToMS())
 
-const setCurrentTime = () => currentTime.value = displayedTimeToMS()
+const setCurrentTime = () => (currentTime.value = displayedTimeToMS())
 
-watch( currentTime, () => {
-  if ( currentTime.value <= 0 && currentState.value === 'running' ) {
+watch(currentTime, () => {
+  if (currentTime.value <= 0 && currentState.value === 'running') {
     pauseTimer()
     audio.value.play()
   }
@@ -64,12 +64,12 @@ watch( currentTime, () => {
 
 const setDisplayedTime = () => {
   displayedTime.hours = formatNumber(
-    Math.floor( currentTime.value / 1000 / 60 / 60 ),
+    Math.floor(currentTime.value / 1000 / 60 / 60)
   )
   displayedTime.minutes = formatNumber(
-    Math.floor( currentTime.value / 1000 / 60 % 60 ),
+    Math.floor((currentTime.value / 1000 / 60) % 60)
   )
-  displayedTime.seconds = formatNumber( currentTime.value / 1000 % 60 )
+  displayedTime.seconds = formatNumber((currentTime.value / 1000) % 60)
 }
 
 const displayedTimeToMS = () => {
@@ -79,17 +79,17 @@ const displayedTimeToMS = () => {
   return hoursInMS + minutesInMS + secondsInMS
 }
 
-watch( displayedTime, newValue => {
-  if ( +newValue.hours < 0 || newValue.hours === '' ) setTimeUnits( 'hours', 0 )
-  if ( +newValue.minutes < 0 || newValue.minutes === '' )
-    setTimeUnits( 'minutes', 0 )
-  if ( +newValue.seconds < 0 || newValue.seconds === '' )
-    setTimeUnits( 'seconds', 0 )
+watch(displayedTime, (newValue) => {
+  if (+newValue.hours < 0 || newValue.hours === '') setTimeUnits('hours', 0)
+  if (+newValue.minutes < 0 || newValue.minutes === '')
+    setTimeUnits('minutes', 0)
+  if (+newValue.seconds < 0 || newValue.seconds === '')
+    setTimeUnits('seconds', 0)
 })
 
-const setTimeUnits = ( units, value ) => {
-  if ( currentState.value === 'running' ) pauseTimer()
-  displayedTime[ units ] = value <= 59 ? formatNumber( value ) : 59
+const setTimeUnits = (units, value) => {
+  if (currentState.value === 'running') pauseTimer()
+  displayedTime[units] = value <= 59 ? formatNumber(value) : 59
   setInitialTime()
   setCurrentTime()
 }
@@ -97,63 +97,63 @@ const setTimeUnits = ( units, value ) => {
 /**
  * Timer controls
  */
-const increaseTimeUnits = units => {
-  if ( currentState.value === 'running' ) pauseTimer()
-  const increasedValue = +displayedTime[ units ] + 1
-  if ( increasedValue > 59 ) {
-    if ( units === 'minutes' )
-      displayedTime[ 'hours' ] = formatNumber( +displayedTime[ 'hours' ] + 1 )
-    if ( units === 'seconds' )
-      displayedTime[ 'minutes' ] = formatNumber( +displayedTime[ 'minutes' ] + 1 )
-    displayedTime[ units ] = formatNumber( 0 )
+const increaseTimeUnits = (units) => {
+  if (currentState.value === 'running') pauseTimer()
+  const increasedValue = +displayedTime[units] + 1
+  if (increasedValue > 59) {
+    if (units === 'minutes')
+      displayedTime['hours'] = formatNumber(+displayedTime['hours'] + 1)
+    if (units === 'seconds')
+      displayedTime['minutes'] = formatNumber(+displayedTime['minutes'] + 1)
+    displayedTime[units] = formatNumber(0)
     return
   }
-  displayedTime[ units ] = formatNumber( increasedValue )
+  displayedTime[units] = formatNumber(increasedValue)
   setInitialTime()
   setCurrentTime()
 }
 
-const decreaseTimeUnits = units => {
-  if ( currentState.value === 'running' ) pauseTimer()
-  const decreasedValue = +displayedTime[ units ] - 1
-  if ( decreasedValue >= 0 ) {
-    displayedTime[ units ] = formatNumber( decreasedValue )
+const decreaseTimeUnits = (units) => {
+  if (currentState.value === 'running') pauseTimer()
+  const decreasedValue = +displayedTime[units] - 1
+  if (decreasedValue >= 0) {
+    displayedTime[units] = formatNumber(decreasedValue)
     setInitialTime()
     setCurrentTime()
   }
 }
 
-const toggleActionButtonIconClasses = computed( () => {
-  if ( currentState.value === 'idle' ) {
+const toggleActionButtonIconClasses = computed(() => {
+  if (currentState.value === 'idle') {
     return 'fas fa-play'
   }
   return 'fas fa-pause'
 })
 
 const startTimer = () => {
-  if ( !initialTime.value || !currentTime.value ) {
+  if (!initialTime.value || !currentTime.value) {
     return
   }
   currentState.value = 'running'
-  intervalId = setInterval( () => {
+  intervalId = setInterval(() => {
     currentTime.value -= 1000
-  }, 1000 )
+  }, 1000)
 }
 
 const pauseTimer = () => {
   currentState.value = 'idle'
-  clearInterval( intervalId )
+  clearInterval(intervalId)
 }
 
 const toggleTimerAction = () =>
   currentState.value === 'idle' ? startTimer() : pauseTimer()
 
-const resetTimer = () => currentTime.value = initialTime.value
+const resetTimer = () => (currentTime.value = initialTime.value)
 
 /**
  * Utilities
  */
-const formatNumber = num => num < 10 ? `0${ num }` : num
+const formatNumber = (num) => (num < 10 ? `0${num}` : num)
 </script>
 
 <style lang="scss">
