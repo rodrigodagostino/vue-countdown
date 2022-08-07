@@ -11,9 +11,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rodrigodagostino/vue-weather-app"
+    "url": "https://github.com/rodrigodagostino/vue-countdown-app"
   },
-  "author": "Rodrigo D’Agostino <rodrigo.dagostino@protonmail.com> (https://www.rodrigodagostino.com/)",
+  "author": "Rodrigo D’Agostino <rodrigo.dagostino@proton.me> (https://www.rodrigodagostino.com/)",
   "license": "MIT",
   "dependencies": {
     "vue": "3.2.37"
