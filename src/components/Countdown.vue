@@ -2,6 +2,7 @@
   <form class="countdown" @submit.prevent="toggleTimerAction">
     <div class="countdown-time row">
       <CountdownProgressRing
+        :current-state="currentState"
         :initial-time="initialTime"
         :current-time="currentTime"
         diameter="300"
@@ -69,7 +70,7 @@ const setDisplayedTime = () => {
   displayedTime.minutes = formatNumber(
     Math.floor((currentTime.value / 1000 / 60) % 60)
   )
-  displayedTime.seconds = formatNumber((currentTime.value / 1000) % 60)
+  displayedTime.seconds = formatNumber(Math.ceil(currentTime.value / 1000) % 60)
 }
 
 const displayedTimeToMS = () => {
@@ -136,8 +137,8 @@ const startTimer = () => {
   }
   currentState.value = 'running'
   intervalId = setInterval(() => {
-    currentTime.value -= 1000
-  }, 1000)
+    currentTime.value -= 100
+  }, 100)
 }
 
 const pauseTimer = () => {

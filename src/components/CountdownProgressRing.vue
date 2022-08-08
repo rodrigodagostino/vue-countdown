@@ -41,9 +41,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
+  currentState: String,
   initialTime: Number,
   currentTime: Number,
   diameter: String,
@@ -60,9 +61,21 @@ const ringStrokeDashoffset = computed(() => {
   }
   return null
 })
+const trackActiveSegmentTransition = ref('stroke-dashoffset 10ms linear')
+
+watch(
+  () => props.currentState,
+  (newState) => {
+    setTimeout(() => {
+      trackActiveSegmentTransition.value = `stroke-dashoffset ${
+        newState === 'idle' ? '1s' : '100ms'
+      } linear`
+    }, 100)
+  }
+)
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .progress-ring-container {
   position: absolute;
   top: 50%;
@@ -84,7 +97,6 @@ const ringStrokeDashoffset = computed(() => {
     stroke: rgba(0, 0, 0, 0.1);
     stroke-linecap: round;
     fill: transparent;
-    transition: stroke-dashoffset 1s linear;
   }
 
   &__track-active-segment {
@@ -92,7 +104,7 @@ const ringStrokeDashoffset = computed(() => {
     fill: transparent;
     transform: rotate(-90deg);
     transform-origin: center;
-    transition: stroke-dashoffset 1s linear;
+    transition: v-bind(trackActiveSegmentTransition);
   }
 
   &__track-inner-shadow,
