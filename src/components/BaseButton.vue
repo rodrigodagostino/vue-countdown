@@ -3,7 +3,7 @@
     :is="tag"
     :href="href"
     :target="target"
-    :type="computedType"
+    :type="type"
     class="button"
     :class="buttonClasses"
   >
@@ -29,7 +29,7 @@ const props = defineProps({
   type: {
     type: String,
     required: false,
-    default: null,
+    default: 'button',
   },
   variation: {
     type: String,
@@ -54,8 +54,6 @@ const props = defineProps({
 })
 
 const tag = props.href ? 'a' : 'button'
-
-const computedType = !props.type && !props.href ? 'button' : null
 
 const buttonClasses = {
   'button--fill': props.variation === 'fill',
