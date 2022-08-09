@@ -37,8 +37,8 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import BaseButton from './BaseButton.vue'
-import CountdownDisplay from './CountdownDisplay.vue'
-import CountdownProgressRing from './CountdownProgressRing.vue'
+import CountdownDisplay from './CountdownTimerDisplay.vue'
+import CountdownProgressRing from './CountdownTimerProgressRing.vue'
 
 const currentState = ref('idle')
 const initialTime = ref(0)

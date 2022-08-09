@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import Countdown from '@/components/Countdown.vue'
+import Countdown from '@/components/CountdownTimer.vue'
 </script>
 
 <style lang="scss">
