@@ -1,10 +1,50 @@
 <script setup>
+import { computed } from 'vue'
+import { debounce } from 'lodash'
+import store from '@/store'
 import BaseButton from './BaseButton.vue'
 
-defineProps({
-  displayedTime: Object,
+const currentStatus = computed(() => store.getters.currentStatus())
+const currentTime = computed(() => store.getters.currentTime())
+const displayedTime = computed(() => {
+  return {
+    hours: formatNumber(Math.floor(currentTime.value / 1000 / 60 / 60)),
+    minutes: formatNumber(Math.floor((currentTime.value / 1000 / 60) % 60)),
+    seconds: formatNumber(Math.ceil(currentTime.value / 1000) % 60),
+  }
 })
-defineEmits(['setTimeUnits', 'increaseTimeUnits', 'decreaseTimeUnits'])
+const MILLISECONDS = {
+  HOUR: 3600000,
+  MINUTE: 60000,
+  SECOND: 1000,
+}
+
+const setDisplayedTimeAsInitialAndCurrentTime = debounce((event, units) => {
+  const hoursInMS = displayedTime.value.hours * MILLISECONDS.HOUR
+  const minutesInMS = displayedTime.value.minutes * MILLISECONDS.MINUTE
+  const secondsInMS = displayedTime.value.seconds * MILLISECONDS.SECOND
+
+  let totalInMS = 0
+  switch (units) {
+    case 'hours':
+      totalInMS =
+        event.target.value * MILLISECONDS.HOUR + minutesInMS + secondsInMS
+      break
+    case 'minutes':
+      totalInMS =
+        hoursInMS + event.target.value * MILLISECONDS.MINUTE + secondsInMS
+      break
+    case 'seconds':
+      totalInMS =
+        hoursInMS + minutesInMS + event.target.value * MILLISECONDS.SECOND
+      break
+  }
+  store.mutations.pauseTimer()
+  store.mutations.setInitialTime(totalInMS)
+  store.mutations.setCurrentTime(totalInMS)
+}, 800)
+
+const formatNumber = (num) => (num < 10 ? `0${num}` : num)
 
 const checkIsNumber = (event) => {
   const keyCode = event.keyCode
@@ -20,22 +60,24 @@ const checkIsNumber = (event) => {
 <template>
   <div class="column">
     <BaseButton
-      @click="$emit('increaseTimeUnits', 'hours')"
       icon-classes="fas fa-chevron-up"
       variation="flat"
+      @click="store.mutations.increaseTime(MILLISECONDS.HOUR)"
     />
     <input
       type="text"
       class="time-units"
       :value="displayedTime.hours"
       maxlength="2"
+      :disabled="currentStatus === 'running'"
+      @focus="$event.target.select()"
       @keydown="checkIsNumber"
-      @input="$emit('setTimeUnits', 'hours', $event.target.value)"
+      @input="setDisplayedTimeAsInitialAndCurrentTime($event, 'hours')"
     />
     <BaseButton
-      @click="$emit('decreaseTimeUnits', 'hours')"
       icon-classes="fas fa-chevron-down"
       variation="flat"
+      @click="store.mutations.decreaseTime(MILLISECONDS.HOUR)"
     />
     <span class="time-label">H</span>
   </div>
@@ -44,22 +86,24 @@ const checkIsNumber = (event) => {
   </div>
   <div class="column">
     <BaseButton
-      @click="$emit('increaseTimeUnits', 'minutes')"
       icon-classes="fas fa-chevron-up"
       variation="flat"
+      @click="store.mutations.increaseTime(MILLISECONDS.MINUTE)"
     />
     <input
       type="text"
       class="time-units"
       :value="displayedTime.minutes"
       maxlength="2"
+      :disabled="currentStatus === 'running'"
+      @focus="$event.target.select()"
       @keydown="checkIsNumber"
-      @input="$emit('setTimeUnits', 'minutes', $event.target.value)"
+      @input="setDisplayedTimeAsInitialAndCurrentTime($event, 'minutes')"
     />
     <BaseButton
-      @click="$emit('decreaseTimeUnits', 'minutes')"
       icon-classes="fas fa-chevron-down"
       variation="flat"
+      @click="store.mutations.decreaseTime(MILLISECONDS.MINUTE)"
     />
     <span class="time-label">M</span>
   </div>
@@ -68,22 +112,24 @@ const checkIsNumber = (event) => {
   </div>
   <div class="column">
     <BaseButton
-      @click="$emit('increaseTimeUnits', 'seconds')"
       icon-classes="fas fa-chevron-up"
       variation="flat"
+      @click="store.mutations.increaseTime(MILLISECONDS.SECOND)"
     />
     <input
       type="text"
       class="time-units"
       :value="displayedTime.seconds"
       maxlength="2"
+      :disabled="currentStatus === 'running'"
+      @focus="$event.target.select()"
       @keydown="checkIsNumber"
-      @input="$emit('setTimeUnits', 'seconds', $event.target.value)"
+      @input="setDisplayedTimeAsInitialAndCurrentTime($event, 'seconds')"
     />
     <BaseButton
-      @click="$emit('decreaseTimeUnits', 'seconds')"
       icon-classes="fas fa-chevron-down"
       variation="flat"
+      @click="store.mutations.decreaseTime(MILLISECONDS.SECOND)"
     />
     <span class="time-label">S</span>
   </div>

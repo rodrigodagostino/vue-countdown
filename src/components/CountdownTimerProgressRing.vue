@@ -1,6 +1,43 @@
+<script setup>
+import { ref, computed, watch } from 'vue'
+import store from '@/store'
+
+const props = defineProps({
+  diameter: {
+    type: Number,
+    default: 300,
+  },
+  strokeWidth: {
+    type: Number,
+    default: 16,
+  },
+})
+
+const currentStatus = computed(() => store.getters.currentStatus())
+const initialTime = computed(() => store.getters.initialTime())
+const currentTime = computed(() => store.getters.currentTime())
+
+const strokeDasharray = (props.diameter - props.strokeWidth) * Math.PI
+const strokeDashoffset = computed(() => {
+  if (!initialTime.value) return null
+  const progressPercentage = (currentTime.value * 100) / initialTime.value
+  return (strokeDasharray / 100) * (100 - progressPercentage)
+})
+const trackActiveSegmentTransition = ref('stroke-dashoffset 100ms linear')
+
+watch(
+  () => currentStatus.value,
+  (newState) => {
+    trackActiveSegmentTransition.value = `stroke-dashoffset ${
+      newState === 'idle' ? '1s' : '100ms'
+    } linear`
+  }
+)
+</script>
+
 <template>
   <div class="progress-ring-container">
-    <svg class="progress-ring" :width="ringDiameter" :height="ringDiameter">
+    <svg class="progress-ring" :width="diameter" :height="diameter">
       <defs>
         <linearGradient id="gradient" x1="100%" y1="0%" x2="0%" y2="100%">
           <stop offset="50%" stop-color="var(--emerald-400)" />
@@ -9,71 +46,36 @@
       </defs>
       <circle
         class="progress-ring__track"
-        :stroke-width="ringStrokeWidth"
-        :stroke-dasharray="ringStrokeDasharray"
-        :r="ringDiameter / 2 - ringStrokeWidth / 2"
-        :cx="ringDiameter / 2"
-        :cy="ringDiameter / 2"
+        :stroke-width="strokeWidth"
+        :stroke-dasharray="strokeDasharray"
+        :r="diameter / 2 - strokeWidth / 2"
+        :cx="diameter / 2"
+        :cy="diameter / 2"
       />
       <circle
         class="progress-ring__track-active-segment"
         stroke="url(#gradient)"
-        :stroke-width="ringStrokeWidth"
-        :stroke-dasharray="ringStrokeDasharray"
-        :stroke-dashoffset="ringStrokeDashoffset"
-        :r="ringDiameter / 2 - ringStrokeWidth / 2"
-        :cx="ringDiameter / 2"
-        :cy="ringDiameter / 2"
+        :stroke-width="strokeWidth"
+        :stroke-dasharray="strokeDasharray"
+        :stroke-dashoffset="strokeDashoffset"
+        :r="diameter / 2 - strokeWidth / 2"
+        :cx="diameter / 2"
+        :cy="diameter / 2"
       />
     </svg>
     <div
       class="progress-ring__track-inner-shadow"
       :style="{
-        width: `${ringDiameter - ringStrokeWidth * 2}px`,
-        height: `${ringDiameter - ringStrokeWidth * 2}px`,
+        width: `${diameter - strokeWidth * 2}px`,
+        height: `${diameter - strokeWidth * 2}px`,
       }"
     ></div>
     <div
       class="progress-ring__track-outer-shadow"
-      :style="{ width: `${ringDiameter}px`, height: `${ringDiameter}px` }"
+      :style="{ width: `${diameter}px`, height: `${diameter}px` }"
     ></div>
   </div>
 </template>
-
-<script setup>
-import { ref, computed, watch } from 'vue'
-
-const props = defineProps({
-  currentState: String,
-  initialTime: Number,
-  currentTime: Number,
-  diameter: String,
-  strokeWidth: String,
-})
-
-const ringDiameter = +props.diameter
-const ringStrokeWidth = +props.strokeWidth
-const ringStrokeDasharray = (ringDiameter - ringStrokeWidth) * Math.PI
-const ringStrokeDashoffset = computed(() => {
-  if (props.initialTime) {
-    const progressPercentage = (props.currentTime * 100) / props.initialTime
-    return (ringStrokeDasharray / 100) * (100 - progressPercentage)
-  }
-  return null
-})
-const trackActiveSegmentTransition = ref('stroke-dashoffset 10ms linear')
-
-watch(
-  () => props.currentState,
-  (newState) => {
-    setTimeout(() => {
-      trackActiveSegmentTransition.value = `stroke-dashoffset ${
-        newState === 'idle' ? '1s' : '100ms'
-      } linear`
-    }, 100)
-  }
-)
-</script>
 
 <style lang="scss">
 .progress-ring-container {

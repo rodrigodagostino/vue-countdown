@@ -7,7 +7,7 @@ module.exports = {
   plugins: ['prettier'],
   extends: [
     'eslint:recommended',
-    'plugin:vue/vue3-essential',
+    'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended',
   ],
   parserOptions: {
@@ -16,6 +16,10 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': 'error',
+    'vue/component-tags-order': [
+      'error',
+      { order: ['script', 'template', 'style'] },
+    ],
     'vue/html-indent': ['error', 2],
   },
 }

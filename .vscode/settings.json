@@ -9,10 +9,7 @@
   "editor.tabSize": 2,
   "files.eol": "\n",
   "eslint.alwaysShowStatus": true,
-  "eslint.lintTask.enable": true,
-  "eslint.validate": ["javascript", "vue"],
   "eslint.format.enable": true,
-  "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+  "eslint.lintTask.enable": true,
+  "eslint.validate": ["javascript", "vue"]
 }

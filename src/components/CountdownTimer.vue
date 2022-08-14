@@ -1,161 +1,54 @@
-<template>
-  <form class="countdown" @submit.prevent="toggleTimerAction">
-    <div class="countdown-time row">
-      <CountdownProgressRing
-        :current-state="currentState"
-        :initial-time="initialTime"
-        :current-time="currentTime"
-        diameter="300"
-        stroke-width="16"
-      />
-      <CountdownDisplay
-        :displayed-time="displayedTime"
-        @set-time-units="setTimeUnits"
-        @increase-time-units="increaseTimeUnits"
-        @decrease-time-units="decreaseTimeUnits"
-      />
-    </div>
-    <div class="countdown-actions row">
-      <BaseButton
-        @click="resetTimer"
-        icon-classes="fas fa-undo-alt"
-        variation="fill"
-      />
-      <BaseButton
-        type="submit"
-        :icon-classes="toggleActionButtonIconClasses"
-        variation="fill"
-        size="medium"
-      />
-    </div>
-    <audio ref="audio" controls>
-      <source src="../assets/ding-dong.wav" type="audio/wav" />
-    </audio>
-  </form>
-</template>
-
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import store from '@/store'
 import BaseButton from './BaseButton.vue'
 import CountdownDisplay from './CountdownTimerDisplay.vue'
 import CountdownProgressRing from './CountdownTimerProgressRing.vue'
 
-const currentState = ref('idle')
-const initialTime = ref(0)
-const currentTime = ref(0)
-const displayedTime = reactive({
-  hours: '00',
-  minutes: '00',
-  seconds: '00',
-})
-let intervalId = null
-const audio = ref(null)
-
-const setInitialTime = () => (initialTime.value = displayedTimeToMS())
-
-const setCurrentTime = () => (currentTime.value = displayedTimeToMS())
+const currentStatus = computed(() => store.getters.currentStatus())
+const currentTime = computed(() => store.getters.currentTime())
+const buzzer = ref(null)
 
 watch(currentTime, () => {
-  if (currentTime.value <= 0 && currentState.value === 'running') {
-    pauseTimer()
-    audio.value.play()
+  if (currentTime.value <= 0 && currentStatus.value === 'running') {
+    buzzer.value.play()
   }
-  setDisplayedTime()
 })
 
-const setDisplayedTime = () => {
-  displayedTime.hours = formatNumber(
-    Math.floor(currentTime.value / 1000 / 60 / 60)
-  )
-  displayedTime.minutes = formatNumber(
-    Math.floor((currentTime.value / 1000 / 60) % 60)
-  )
-  displayedTime.seconds = formatNumber(Math.ceil(currentTime.value / 1000) % 60)
-}
-
-const displayedTimeToMS = () => {
-  const hoursInMS = displayedTime.hours * 60 * 60 * 1000
-  const minutesInMS = displayedTime.minutes * 60 * 1000
-  const secondsInMS = displayedTime.seconds * 1000
-  return hoursInMS + minutesInMS + secondsInMS
-}
-
-watch(displayedTime, (newValue) => {
-  if (+newValue.hours < 0 || newValue.hours === '') setTimeUnits('hours', 0)
-  if (+newValue.minutes < 0 || newValue.minutes === '')
-    setTimeUnits('minutes', 0)
-  if (+newValue.seconds < 0 || newValue.seconds === '')
-    setTimeUnits('seconds', 0)
-})
-
-const setTimeUnits = (units, value) => {
-  if (currentState.value === 'running') pauseTimer()
-  displayedTime[units] = value <= 59 ? formatNumber(value) : 59
-  setInitialTime()
-  setCurrentTime()
-}
-
-/**
- * Timer controls
- */
-const increaseTimeUnits = (units) => {
-  if (currentState.value === 'running') pauseTimer()
-  const increasedValue = +displayedTime[units] + 1
-  if (increasedValue > 59) {
-    if (units === 'minutes')
-      displayedTime['hours'] = formatNumber(+displayedTime['hours'] + 1)
-    if (units === 'seconds')
-      displayedTime['minutes'] = formatNumber(+displayedTime['minutes'] + 1)
-    displayedTime[units] = formatNumber(0)
-    return
-  }
-  displayedTime[units] = formatNumber(increasedValue)
-  setInitialTime()
-  setCurrentTime()
-}
-
-const decreaseTimeUnits = (units) => {
-  if (currentState.value === 'running') pauseTimer()
-  const decreasedValue = +displayedTime[units] - 1
-  if (decreasedValue >= 0) {
-    displayedTime[units] = formatNumber(decreasedValue)
-    setInitialTime()
-    setCurrentTime()
-  }
-}
-
-const toggleActionButtonIconClasses = computed(() => {
-  if (currentState.value === 'idle') {
-    return 'fas fa-play'
-  }
-  return 'fas fa-pause'
-})
-
-const startTimer = () => {
-  if (!initialTime.value || !currentTime.value) {
-    return
-  }
-  currentState.value = 'running'
-  intervalId = setInterval(() => {
-    currentTime.value -= 100
-  }, 100)
-}
-
-const pauseTimer = () => {
-  currentState.value = 'idle'
-  clearInterval(intervalId)
-}
+const actionButtonIconClasses = computed(() =>
+  currentStatus.value === 'idle' ? 'fas fa-play' : 'fas fa-pause'
+)
 
 const toggleTimerAction = () =>
-  currentState.value === 'idle' ? startTimer() : pauseTimer()
-
-const resetTimer = () => (currentTime.value = initialTime.value)
-
-/**
- * Utilities
- */
-const formatNumber = (num) => (num < 10 ? `0${num}` : num)
+  currentStatus.value === 'idle'
+    ? store.mutations.startTimer()
+    : store.mutations.pauseTimer()
 </script>
+
+<template>
+  <form class="countdown" @submit.prevent="toggleTimerAction">
+    <div class="countdown-tracking row">
+      <CountdownProgressRing :diameter="300" :stroke-width="16" />
+      <CountdownDisplay />
+    </div>
+    <div class="countdown-actions row">
+      <BaseButton
+        icon-classes="fas fa-undo-alt"
+        variation="fill"
+        @click="store.mutations.resetTimer"
+      />
+      <BaseButton
+        type="submit"
+        :icon-classes="actionButtonIconClasses"
+        variation="fill"
+        size="medium"
+      />
+    </div>
+    <audio ref="buzzer" controls>
+      <source src="../assets/ding-dong.wav" type="audio/wav" />
+    </audio>
+  </form>
+</template>
 
 <style lang="scss">
 .countdown {

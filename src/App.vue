@@ -1,7 +1,11 @@
+<script setup>
+import CountdownTimer from '@/components/CountdownTimer.vue'
+</script>
+
 <template>
   <main class="site-main">
     <div class="container">
-      <Countdown />
+      <CountdownTimer />
     </div>
   </main>
   <footer class="site-footer">
@@ -16,10 +20,6 @@
     </div>
   </footer>
 </template>
-
-<script setup>
-import Countdown from '@/components/CountdownTimer.vue'
-</script>
 
 <style lang="scss">
 /**
